@@ -3,6 +3,8 @@ __license__ = "GPLv2"
 __maintainer__ = "Joseph Ryan"
 __email__ = "jr@aphyt.com"
 
+import time
+
 import pyodbc
 
 
@@ -46,10 +48,22 @@ class LVSDispatcher:
             print(f'Reports not accessible: {error}')
 
     def get_record(self, index: int):
+        previous_length = 0
         try:
+
             self.cursor.execute(f'select * from ReportData where '
                                 f'ReportID={str(index)}')
             record = self.cursor.fetchall()
+            while len(record) != previous_length:
+                previous_length = len(record)
+                # Wait a bit and read again, as the LVS write takes time
+                time.sleep(.1)
+                self.connection.commit()
+                self.cursor.execute(f'select * from ReportData where '
+                                    f'ReportID={str(index)}')
+                record = self.cursor.fetchall()
+                # print(f'previous_length: {previous_length}, current_length = {len(record)}')
+
             self.upper_read_index = index
             return record
         except pyodbc.ProgrammingError as error:
