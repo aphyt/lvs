@@ -24,9 +24,9 @@ class LVSDispatcher:
 
     def record_count(self):
         try:
-            self.cursor.execute(f'select * from ReportData where Sequence=0')
-            rows = self.cursor.fetchall()
-            return len(rows)
+            self.cursor.execute(f'select count(*) from ReportData where Sequence=0;')
+            rows = self.cursor.fetchone()
+            return rows[0]
         except pyodbc.ProgrammingError as error:
             print(f'Reports not accessible: {error}')
 
