@@ -42,6 +42,27 @@ class LVSDispatcher:
         except pyodbc.ProgrammingError as error:
             print(f'Reports not accessible: {error}')
 
+    def get_record(self, index: int):
+        try:
+            self.cursor.execute(f'select * from ReportData where '
+                                f'ReportID={str(index)}')
+            record = self.cursor.fetchall()
+            if record is None:
+                return record
+            else:
+                return record
+        except pyodbc.ProgrammingError as error:
+            print(f'Reports not accessible: {error}')
+
+    def get_previous_n_records(self, number_of_records: int):
+        record_count = self.record_count()
+        record_read_index = record_count - number_of_records + 1
+        record_list = []
+        for index in range(number_of_records):
+            record_list.append(self.get_record(record_read_index))
+            record_read_index += 1
+        return record_list
+
     def __del__(self):
         if self.cursor is not None:
             self.cursor.close()

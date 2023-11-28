@@ -11,4 +11,8 @@ if __name__ == '__main__':
     count = lvs_instance.record_count()
     print(count)
     for i in range(count):
-        print(lvs_instance.symbol_text(i+1))
+        text = lvs_instance.symbol_text(i+1)
+        if text is not None:
+            print(text)
+
+    print(lvs_instance.get_previous_n_records(10))
