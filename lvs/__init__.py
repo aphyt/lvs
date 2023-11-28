@@ -28,7 +28,19 @@ class LVSDispatcher:
             rows = self.cursor.fetchall()
             return len(rows)
         except pyodbc.ProgrammingError as error:
-            print(f'Reports not accessible')
+            print(f'Reports not accessible: {error}')
+
+    def symbol_text(self, index: int):
+        try:
+            self.cursor.execute(f'select * from ReportData where '
+                                f'ReportID={str(index)} and ParameterName=\'Decoded text\'')
+            row = self.cursor.fetchone()
+            if row is None:
+                return row
+            else:
+                return row[4]
+        except pyodbc.ProgrammingError as error:
+            print(f'Reports not accessible: {error}')
 
     def __del__(self):
         if self.cursor is not None:

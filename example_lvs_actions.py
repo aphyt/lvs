@@ -8,4 +8,7 @@ import lvs
 if __name__ == '__main__':
     lvs_instance = lvs.LVSDispatcher()
     lvs_instance.connect('192.168.250.115', 'LVS-95XX', 'LVS-95XX', 'LVS-95XX')
-    print(lvs_instance.record_count())
+    count = lvs_instance.record_count()
+    print(count)
+    for i in range(count):
+        print(lvs_instance.symbol_text(i+1))
