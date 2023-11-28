@@ -15,4 +15,6 @@ if __name__ == '__main__':
         if text is not None:
             print(text)
 
-    print(lvs_instance.get_previous_n_records(10))
+    records = lvs_instance.get_previous_n_records(5)
+    for record in records:
+        print(record)
