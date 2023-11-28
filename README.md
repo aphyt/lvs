@@ -1,8 +1,10 @@
+# Setup System
+## Install Requirements
+`pip install -r requirements.txt`
+## Install MariaDB Connector
+Should match the Python interpreter on 32-bit or 64-bit. The Microscan Access Database is 32-bit, so most development uses 32-bit connectors.
 
-
-`pip install pyodbc`
-
-
+# Example with Microsoft Access Database
 ```python
 import pyodbc
 
