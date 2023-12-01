@@ -8,7 +8,8 @@ import time
 
 if __name__ == '__main__':
     lvs_instance = lvs.LVSDispatcher()
-    lvs_instance.connect('192.168.250.115', 'LVS-95XX', 'LVS-95XX', 'LVS-95XX')
+    # lvs_instance.connect('192.168.250.115', 'LVS-95XX', 'LVS-95XX', 'LVS-95XX')
+    lvs_instance.connect()
     count = lvs_instance.record_count()
     print(count)
     for i in range(count):

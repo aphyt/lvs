@@ -15,14 +15,25 @@ class LVSDispatcher:
         self.upper_read_index = upper_read_index
         self.conn_string = ''
 
-    def connect(self, host_server: str, user: str, password: str, database: str, port: int = 3306):
-        self.conn_string = (
-            f"DRIVER={{MariaDB ODBC 3.1 Driver}};"
-            f"User={user};"
-            f"Password={password};"
-            f"Database={database};"
-            f"Server={host_server};"
-            f"Port={str(port)}")
+    def connect(self,
+                host_server: str = None,
+                user: str = None,
+                password: str = None,
+                database: str = None,
+                port: int = 3306):
+        if host_server is None:
+            self.conn_string = r'Driver={Microsoft Access Driver (*.mdb)};DBQ=C:\Users\Public\LVS-95XX\LVS-95XX.mdb;'
+        else:
+            assert user is not None
+            assert password is not None
+            assert database is not None
+            self.conn_string = (
+                f"DRIVER={{MariaDB ODBC 3.1 Driver}};"
+                f"User={user};"
+                f"Password={password};"
+                f"Database={database};"
+                f"Server={host_server};"
+                f"Port={str(port)}")
         self.connection = pyodbc.connect(self.conn_string)
         self.cursor = self.connection.cursor()
 
