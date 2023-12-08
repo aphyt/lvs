@@ -90,6 +90,25 @@ class LVSDispatcher:
         except pyodbc.ProgrammingError as error:
             print(f'Reports not accessible: {error}')
 
+    def overall_grade(self, index: int):
+        """
+        Get the overall grade at a given database index
+
+        :param int index:
+        :return:The overall grade in this record
+        :rtype: str
+        """
+        try:
+            self.cursor.execute(f'select * from ReportData where '
+                                f'ReportID={str(index)} and ParameterName=\'Overall grade\'')
+            row = self.cursor.fetchone()
+            if row is None:
+                return row
+            else:
+                return row[4]
+        except pyodbc.ProgrammingError as error:
+            print(f'Reports not accessible: {error}')
+
     def get_record(self, index: int):
         """
         Get the LVS record at a given database index
