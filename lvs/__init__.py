@@ -4,7 +4,7 @@ __maintainer__ = "Joseph Ryan"
 __email__ = "jr@aphyt.com"
 
 import time
-
+from typing import List, Union
 import pyodbc
 
 
@@ -71,6 +71,42 @@ class LVSDispatcher:
         except pyodbc.ProgrammingError as error:
             print(f'Reports not accessible: {error}')
 
+    def get_parameter(self, index: int, parameter_name: Union[str, List[str]]):
+        """
+        Get the parameter name's text at a given database index, or if a list of parameters is
+        supplied, return a dictionary with all parameters keyed to the parameter name.
+
+        :param int index:
+        :param Union[str, List[str]] parameter_name:
+        :return:The string read in this record
+        :rtype: str, Dict
+        """
+        if isinstance(parameter_name, str):
+            try:
+                self.cursor.execute(f'select * from ReportData where '
+                                    f'ReportID={str(index)} and ParameterName=\'{parameter_name}\'')
+                row = self.cursor.fetchone()
+                if row is None:
+                    return row
+                else:
+                    return row[4]
+            except pyodbc.ProgrammingError as error:
+                print(f'Reports not accessible: {error}')
+        elif isinstance(parameter_name, List):
+            parameters = {}
+            for parameter in parameter_name:
+                try:
+                    self.cursor.execute(f'select * from ReportData where '
+                                        f'ReportID={str(index)} and ParameterName=\'{parameter}\'')
+                    row = self.cursor.fetchone()
+                    if row is None:
+                        parameters[parameter] = row
+                    else:
+                        parameters[parameter] = row[4]
+                except pyodbc.ProgrammingError as error:
+                    print(f'Reports not accessible: {error}')
+            return parameters
+
     def symbol_text(self, index: int):
         """
         Get the symbol text at a given database index
@@ -79,16 +115,7 @@ class LVSDispatcher:
         :return:The string read in this record
         :rtype: str
         """
-        try:
-            self.cursor.execute(f'select * from ReportData where '
-                                f'ReportID={str(index)} and ParameterName=\'Decoded text\'')
-            row = self.cursor.fetchone()
-            if row is None:
-                return row
-            else:
-                return row[4]
-        except pyodbc.ProgrammingError as error:
-            print(f'Reports not accessible: {error}')
+        return self.get_parameter(index, 'Decoded text')
 
     def overall_grade(self, index: int):
         """
@@ -98,16 +125,7 @@ class LVSDispatcher:
         :return:The overall grade in this record
         :rtype: str
         """
-        try:
-            self.cursor.execute(f'select * from ReportData where '
-                                f'ReportID={str(index)} and ParameterName=\'Overall grade\'')
-            row = self.cursor.fetchone()
-            if row is None:
-                return row
-            else:
-                return row[4]
-        except pyodbc.ProgrammingError as error:
-            print(f'Reports not accessible: {error}')
+        return self.get_parameter(index, 'Overall grade')
 
     def get_record(self, index: int):
         """
